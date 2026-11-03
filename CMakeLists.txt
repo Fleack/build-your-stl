@@ -7,3 +7,5 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(CTest)
 add_subdirectory(infrastructure/test)
+
+add_subdirectory(exercises)
