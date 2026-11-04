@@ -31,6 +31,7 @@ Implement `bys::add` in [`add.hpp`](exercises/warmup/add/include/bys/add.hpp), t
 ## Documentation
 
 - [Test framework](infrastructure/test/README.md)
+- [Contributing](CONTRIBUTING.md)
 
 Inspired by [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x).
 

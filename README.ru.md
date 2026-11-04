@@ -31,6 +31,7 @@ cmake --build out/add --target add_tests
 ## Документация
 
 - [Тестовый фреймворк](infrastructure/test/README.ru.md)
+- [Как внести вклад](CONTRIBUTING.ru.md)
 
 Источник идеи — [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x).
 
