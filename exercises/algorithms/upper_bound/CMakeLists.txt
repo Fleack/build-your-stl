@@ -1,0 +1,8 @@
+add_library(bys_upper_bound INTERFACE)
+target_include_directories(bys_upper_bound INTERFACE include)
+target_compile_features(bys_upper_bound INTERFACE cxx_std_20)
+
+if(BUILD_TESTING)
+    add_executable(upper_bound_tests tests/upper_bound.cpp)
+    target_link_libraries(upper_bound_tests PRIVATE bys_upper_bound bys_test_main)
+endif()

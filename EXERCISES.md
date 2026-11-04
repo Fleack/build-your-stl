@@ -28,6 +28,7 @@
 | `count` | Count matching elements in a range | [Open exercise](exercises/algorithms/count/README.md) |
 | `equal` | Compare ranges element by element | [Open exercise](exercises/algorithms/equal/README.md) |
 | `lower_bound` | Find a partition boundary with binary search | [Open exercise](exercises/algorithms/lower_bound/README.md) |
+| `upper_bound` | Find the first element ordered after a value | [Open exercise](exercises/algorithms/upper_bound/README.md) |
 
 ## Containers
 
