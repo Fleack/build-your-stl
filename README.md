@@ -33,3 +33,7 @@ Implement `bys::add` in [`add.hpp`](exercises/warmup/add/include/bys/add.hpp), t
 - [Test framework](infrastructure/test/README.md)
 
 Inspired by [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x).
+
+## License
+
+This project is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).

@@ -33,3 +33,7 @@ cmake --build out/add --target add_tests
 - [Тестовый фреймворк](infrastructure/test/README.ru.md)
 
 Источник идеи — [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x).
+
+## Лицензия
+
+Проект распространяется по лицензии [PolyForm Noncommercial License 1.0.0](LICENSE).
