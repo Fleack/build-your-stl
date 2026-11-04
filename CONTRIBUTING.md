@@ -17,6 +17,16 @@ Use your personal fork to work through the exercises and keep your solutions the
 - For changes to the test framework or shared build configuration, run the [framework self-tests](infrastructure/test/README.md#check-the-framework).
 - For documentation, check relative links and update both language versions together.
 
+To run the same reference tests as CI, use a separate build directory.
+
+```sh
+cmake -S . -B out/reference -DBYS_REFERENCE_TESTS=ON
+cmake --build out/reference --parallel
+ctest --test-dir out/reference --output-on-failure
+```
+
+This mode tests the exercises against reference implementations and runs the framework self-tests. Use the exercise's own build instructions to test your implementation.
+
 ## Follow the code style
 
 Format changed C++ files with [`.clang-format`](.clang-format). Use `snake_case` for functions, variables and file names, and `PascalCase` for helper types. Keep the standard library names for the APIs that exercises reproduce, such as `bys::vector` and `value_type`. Name test targets `<exercise>_tests` and test cases `<exercise>.<scenario>`.
@@ -26,7 +36,7 @@ Format changed C++ files with [`.clang-format`](.clang-format). Use `snake_case`
 - Keep the exercise independent and use C++20 and the project's test framework.
 - Add README in English and if possible in Russian, a starter header and a separate CMake test target.
 - Test the documented behavior and boundary cases. Add type, `constexpr` and complexity checks where the contract calls for them.
-- Register the exercise in [`exercises/CMakeLists.txt`](exercises/CMakeLists.txt) and add a link to the [English catalog](EXERCISES.md) and the [Russian catalog](EXERCISES.ru.md).
+- Register the exercise and its standard library header in [`exercises/CMakeLists.txt`](exercises/CMakeLists.txt). List any additional standard library symbols that the tests use. Add a link to the [English catalog](EXERCISES.md) and the [Russian catalog](EXERCISES.ru.md).
 
 ## Review and merge
 

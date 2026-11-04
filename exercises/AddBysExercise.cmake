@@ -1,0 +1,32 @@
+if(BYS_REFERENCE_TESTS)
+    add_custom_target(bys_reference_tests ALL)
+endif()
+
+function(add_bys_exercise directory standard_header)
+    add_subdirectory("${directory}" EXCLUDE_FROM_ALL)
+
+    if(NOT BYS_REFERENCE_TESTS)
+        return()
+    endif()
+
+    get_filename_component(exercise "${directory}" NAME)
+    set(target "${exercise}_tests")
+    set(reference_templates "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/reference")
+    set(reference_include "${CMAKE_CURRENT_BINARY_DIR}/reference/${exercise}")
+    set(reference_header "${reference_include}/bys/${exercise}.hpp")
+
+    if(standard_header STREQUAL "")
+        configure_file("${reference_templates}/${exercise}.hpp" "${reference_header}" COPYONLY)
+    else()
+        set(standard_aliases "using std::${exercise};")
+        foreach(symbol IN LISTS ARGN)
+            string(APPEND standard_aliases "\nusing std::${symbol};")
+        endforeach()
+        configure_file("${reference_templates}/std_alias.hpp.in" "${reference_header}" @ONLY)
+    endif()
+
+    target_include_directories(${target} BEFORE PRIVATE "${reference_include}")
+    add_dependencies(bys_reference_tests ${target})
+    add_test(NAME exercise.${exercise} COMMAND ${target})
+    set_tests_properties(exercise.${exercise} PROPERTIES TIMEOUT 30)
+endfunction()

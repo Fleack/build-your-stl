@@ -1,0 +1,7 @@
+#pragma once
+#include <@standard_header@>
+
+namespace bys
+{
+@standard_aliases@
+}
