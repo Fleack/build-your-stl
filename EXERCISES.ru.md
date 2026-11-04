@@ -27,7 +27,7 @@
 | `find` | Искать элементы диапазона через итераторы | [Открыть задание](exercises/algorithms/find/README.ru.md) |
 | `count` | Подсчитывать совпадающие элементы диапазона | [Открыть задание](exercises/algorithms/count/README.ru.md) |
 | `equal` | Поэлементно сравнивать диапазоны | [Открыть задание](exercises/algorithms/equal/README.ru.md) |
-| `lower_bound` | Находить границу разбиения двоичным поиском | Запланировано |
+| `lower_bound` | Находить границу разбиения двоичным поиском | [Открыть задание](exercises/algorithms/lower_bound/README.ru.md) |
 
 ## Контейнеры
 
