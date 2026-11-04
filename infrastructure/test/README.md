@@ -86,13 +86,18 @@ Changing the expected value in `CHECK_EQ` to `0` produces:
 
 ```text
 [FAIL] vector.access
-  tests/example.cpp:14
-  values.front() == 0
+
+CHECK failed in: tests/example.cpp:14
+values.front() == 0
+
 Tests: 0 passed, 1 failed
 Checks: 2 passed, 1 failed
+
+TESTS FAILED
 ```
 
-The report points to the file and line of the failed assertion.
+Each failure shows its expression and the file and line, with project files relative to the project root.
+In a Linux or WSL terminal, `ALL TESTS PASSED` appears in green and `TESTS FAILED` appears in red.
 
 | Exit code | Meaning |
 | --- | --- |

@@ -86,13 +86,18 @@ cmake --build out/Debug --target example_tests
 
 ```text
 [FAIL] vector.access
-  tests/example.cpp:14
-  values.front() == 0
+
+CHECK failed in: tests/example.cpp:14
+values.front() == 0
+
 Tests: 0 passed, 1 failed
 Checks: 2 passed, 1 failed
+
+TESTS FAILED
 ```
 
-Отчёт указывает файл и строку, в которой не прошла проверка.
+Для каждой проваленной проверки отчёт указывает выражение, путь к файлу и номер строки. Пути к файлам проекта отсчитываются от его корня.
+В терминале Linux или WSL строка `ALL TESTS PASSED` выводится зелёным, а `TESTS FAILED` — красным.
 
 | Код завершения | Значение |
 | --- | --- |

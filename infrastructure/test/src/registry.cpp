@@ -46,7 +46,7 @@ void record_check(bool passed, std::string_view expression, std::string message,
     }
 
     ++context.failed_checks;
-    context.failures.push_back({location, std::string(expression), std::move(message)});
+    context.failures.push_back({location, std::string(expression), std::move(message), severity});
     if (severity == Severity::require)
     {
         throw AbortTest{};

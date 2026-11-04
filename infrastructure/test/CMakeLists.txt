@@ -5,6 +5,7 @@ add_library(bys_test STATIC
 )
 target_include_directories(bys_test PUBLIC include)
 target_compile_features(bys_test PUBLIC cxx_std_20)
+target_compile_definitions(bys_test PRIVATE "BYS_TEST_PROJECT_ROOT=\"${PROJECT_SOURCE_DIR}\"")
 
 add_library(bys_test_main STATIC src/main.cpp)
 target_link_libraries(bys_test_main PUBLIC bys_test)

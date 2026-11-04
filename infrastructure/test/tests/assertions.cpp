@@ -134,12 +134,15 @@ TEST_CASE("assertions.report_uses_check_source_location")
     for (std::size_t index = 0; index < lines.size(); ++index)
     {
         CHECK_EQ(context.failures[index].location.line(), lines[index]);
-        auto const expected = std::string(registration_location.file_name()) + ':' + std::to_string(lines[index]);
-        CHECK(output.str().find(expected) != std::string::npos);
     }
-    CHECK(output.str().find("false") != std::string::npos);
-    CHECK(output.str().find("1 == 2") != std::string::npos);
-    CHECK(output.str().find("3 == 4") != std::string::npos);
+    std::string_view const path = " failed in: infrastructure/test/tests/assertions.cpp:";
+    std::ostringstream expected;
+    expected << "[FAIL] location.example\n\n"
+             << "CHECK" << path << lines[0] << "\nfalse\n\n"
+             << "CHECK" << path << lines[1] << "\n1 == 2\n\n"
+             << "CHECK" << path << lines[2] << "\nstatic_cast<void>(0) throws std::runtime_error\nNo exception was thrown\n\n"
+             << "REQUIRE" << path << lines[3] << "\n3 == 4\n\n";
+    CHECK_EQ(output.str(), expected.str());
 }
 
 TEST_CASE("assertions.require_stops_and_unwinds")

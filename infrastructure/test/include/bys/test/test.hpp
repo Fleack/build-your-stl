@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <exception>
 #include <iosfwd>
+#include <optional>
 #include <source_location>
 #include <span>
 #include <string>
@@ -39,6 +40,7 @@ struct Failure
     std::source_location location;
     std::string expression;
     std::string message;
+    std::optional<Severity> severity = std::nullopt;
 };
 
 struct TestContext
