@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Formatting, naming and links
+    runs-on: ubuntu-24.04
+    container: ubuntu:26.10
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Install tools
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends ca-certificates git cmake ninja-build g++-16 clang-22 clang-format-22 clang-tidy-22 python3 cmark-gfm
+      - uses: actions/checkout@v6.1.0
+        with:
+          persist-credentials: false
+      - name: Trust the checkout directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Check C++ formatting
+        run: git ls-files -z -- '*.cpp' '*.hpp' | xargs -0 -r clang-format-22 --dry-run --Werror
+      - name: Check Markdown links
+        run: python3 tools/check_markdown_links.py
+      - name: Check C++ naming
+        run: |
+          cmake -S . -B out/ci-style -G Ninja -DCMAKE_CXX_COMPILER=clang++-22 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBYS_REFERENCE_TESTS=ON
+          run-clang-tidy-22 -clang-tidy-binary clang-tidy-22 -p out/ci-style -j 2
+
+  tests:
+    name: Tests (${{ matrix.compiler }})
+    needs: quality
+    runs-on: ubuntu-24.04
+    container: ubuntu:26.10
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [g++-16, clang++-22]
+    steps:
+      - name: Install compiler and build tools
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: |
+          apt-get update
+          packages=(ca-certificates git cmake ninja-build g++-16)
+          if [[ "$CXX" == clang++-22 ]]; then
+            packages+=(clang-22)
+          fi
+          apt-get install -y --no-install-recommends "${packages[@]}"
+          "$CXX" --version
+          if [[ "$CXX" == g++-16 ]]; then
+            [[ "$("$CXX" -dumpfullversion)" == 16.2.* ]]
+          fi
+      - uses: actions/checkout@v6.1.0
+        with:
+          persist-credentials: false
+      - name: Configure reference build
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: cmake -S . -B out/ci -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBYS_REFERENCE_TESTS=ON
+      - name: Build
+        run: cmake --build out/ci --parallel 2
+      - name: Run framework and exercise tests
+        run: ctest --test-dir out/ci --output-on-failure --no-tests=error --timeout 60

@@ -41,3 +41,5 @@ Format changed C++ files with [`.clang-format`](.clang-format). Use `snake_case`
 ## Review and merge
 
 The repository owner reviews a PR after its required CI checks pass. To merge, the PR also needs an approving review from the owner, [@Fleack](https://github.com/Fleack), and must follow the code style and naming rules above.
+
+CI checks C++ formatting with clang-format 22, C++ identifiers with clang-tidy 22, and links to repository files and Markdown headings. The test jobs run on Ubuntu 26.10 with GCC 16.2 and Clang 22.
