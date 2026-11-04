@@ -26,7 +26,7 @@
 | --- | --- | --- |
 | `find` | Search a range through iterators | [Open exercise](exercises/algorithms/find/README.md) |
 | `count` | Count matching elements in a range | [Open exercise](exercises/algorithms/count/README.md) |
-| `equal` | Compare ranges element by element | Planned |
+| `equal` | Compare ranges element by element | [Open exercise](exercises/algorithms/equal/README.md) |
 | `lower_bound` | Find a partition boundary with binary search | Planned |
 
 ## Containers

@@ -1,2 +1,3 @@
 add_subdirectory(algorithms/find EXCLUDE_FROM_ALL)
 add_subdirectory(algorithms/count EXCLUDE_FROM_ALL)
+add_subdirectory(algorithms/equal EXCLUDE_FROM_ALL)
