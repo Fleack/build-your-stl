@@ -15,7 +15,9 @@ namespace
 {
 struct Key
 {
-    explicit Key(int value) : value(value) {}
+    explicit Key(int value)
+        : value(value)
+    {}
     Key(Key const&) = delete;
 
     int value;
@@ -49,14 +51,16 @@ STATIC_CHECK([] {
     STATIC_CHECK(std::is_same_v<decltype(bys::upper_bound(items, items + 4, 3)), int const*>,
         "bys::upper_bound must return the iterator type");
     return bys::upper_bound(items, items + 4, 3) == items + 3;
-}(), "bys::upper_bound must work in a constant expression");
+}(),
+    "bys::upper_bound must work in a constant expression");
 
 STATIC_CHECK([] {
     int items[]{5, 3, 3, 1};
     STATIC_CHECK(std::is_same_v<decltype(bys::upper_bound(items, items + 4, 3, std::greater<>{})), int*>,
         "bys::upper_bound with a comparator must return the iterator type");
     return bys::upper_bound(items, items + 4, 3, std::greater<>{}) == items + 3;
-}(), "bys::upper_bound with a comparator must work in a constant expression");
+}(),
+    "bys::upper_bound with a comparator must work in a constant expression");
 
 TEST_CASE("upper_bound.small_partitions")
 {
@@ -142,7 +146,8 @@ TEST_CASE("upper_bound.descending")
 
 TEST_CASE("upper_bound.empty_and_throwing_comparator")
 {
-    struct ComparisonError {};
+    struct ComparisonError
+    {};
     int items[]{1};
     auto const before = [](int, int) -> bool { throw ComparisonError{}; };
 

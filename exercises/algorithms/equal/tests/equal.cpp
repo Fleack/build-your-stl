@@ -28,7 +28,8 @@ STATIC_CHECK([] {
     STATIC_CHECK(std::is_same_v<decltype(bys::equal(left, left + 3, right, right + 3)), bool>,
         "bys::equal must return bool");
     return bys::equal(left, left + 3, right, right + 3);
-}(), "bys::equal must work in a constant expression");
+}(),
+    "bys::equal must work in a constant expression");
 
 TEST_CASE("equal.empty")
 {

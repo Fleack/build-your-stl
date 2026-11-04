@@ -1,6 +1,3 @@
-#include <bys/vector.hpp>
-#include <bys/test/test.hpp>
-
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -8,6 +5,9 @@
 #include <new>
 #include <type_traits>
 #include <utility>
+
+#include <bys/test/test.hpp>
+#include <bys/vector.hpp>
 
 namespace
 {
@@ -36,10 +36,14 @@ struct TrackingAllocator
 
     AllocationState* state;
 
-    explicit TrackingAllocator(AllocationState& state) noexcept : state(&state) {}
+    explicit TrackingAllocator(AllocationState& state) noexcept
+        : state(&state)
+    {}
 
     template <class U>
-    TrackingAllocator(TrackingAllocator<U, Propagate> const& other) noexcept : state(other.state) {}
+    TrackingAllocator(TrackingAllocator<U, Propagate> const& other) noexcept
+        : state(other.state)
+    {}
 
     T* allocate(std::size_t count)
     {

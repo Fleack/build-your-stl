@@ -1,6 +1,3 @@
-#include <bys/vector.hpp>
-#include <bys/test/test.hpp>
-
 #include <algorithm>
 #include <array>
 #include <iterator>
@@ -10,6 +7,9 @@
 #include <string>
 #include <type_traits>
 #include <utility>
+
+#include <bys/test/test.hpp>
+#include <bys/vector.hpp>
 
 namespace
 {
@@ -144,8 +144,7 @@ TEST_CASE("vector.emplace_and_erase")
 TEST_CASE("vector.free_erase")
 {
     Vector items{1, 2, 3, 2, 4, 5, 4};
-    STATIC_CHECK(std::is_same_v<decltype(bys::erase(items, 2L)), Vector::size_type>
-        && std::is_same_v<decltype(bys::erase_if(items, [](int) { return true; })), Vector::size_type>,
+    STATIC_CHECK(std::is_same_v<decltype(bys::erase(items, 2L)), Vector::size_type> && std::is_same_v<decltype(bys::erase_if(items, [](int) { return true; })), Vector::size_type>,
         "erase and erase_if must return the number erased as size_type");
     CHECK_EQ(bys::erase(items, 2L), 2u);
     CHECK(std::ranges::equal(items, std::array{1, 3, 4, 5, 4}));

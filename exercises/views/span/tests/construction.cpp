@@ -1,6 +1,3 @@
-#include <bys/span.hpp>
-#include <bys/test/test.hpp>
-
 #include <algorithm>
 #include <array>
 #include <cstddef>
@@ -13,6 +10,9 @@
 #include <utility>
 #include <vector>
 
+#include <bys/span.hpp>
+#include <bys/test/test.hpp>
+
 namespace
 {
 using Dynamic = bys::span<int>;
@@ -21,9 +21,14 @@ using ReadOnly = bys::span<int const>;
 using ReadOnlyFixed = bys::span<int const, 3>;
 using Zero = bys::span<int, 0>;
 
-struct Base { int value; };
-struct Derived : Base {};
-struct SourceError {};
+struct Base
+{
+    int value;
+};
+struct Derived : Base
+{};
+struct SourceError
+{};
 
 struct SizedEnd
 {
@@ -52,7 +57,12 @@ struct SizedEnd
 
 struct Range
 {
-    enum class Failure { none, data, size };
+    enum class Failure
+    {
+        none,
+        data,
+        size
+    };
 
     int* first;
     std::size_t count;
@@ -82,67 +92,34 @@ template <class T>
 void accept(T);
 
 template <class T, class... Args>
-concept ImplicitListConstruction = requires(Args... args) { accept<T>({args...}); };
+concept ImplicitListConstruction = requires (Args... args) { accept<T>({args...}); };
 } // namespace
 
-STATIC_CHECK(bys::dynamic_extent == std::numeric_limits<std::size_t>::max()
-    && Dynamic::extent == bys::dynamic_extent && Fixed::extent == 3 && Zero::extent == 0,
+STATIC_CHECK(bys::dynamic_extent == std::numeric_limits<std::size_t>::max() && Dynamic::extent == bys::dynamic_extent && Fixed::extent == 3 && Zero::extent == 0,
     "extent must reflect the template argument");
-STATIC_CHECK(std::is_same_v<ReadOnly::element_type, int const> && std::is_same_v<ReadOnly::value_type, int>
-    && std::is_same_v<Dynamic::size_type, std::size_t> && std::is_same_v<Dynamic::difference_type, std::ptrdiff_t>
-    && std::is_same_v<Dynamic::pointer, int*> && std::is_same_v<Dynamic::const_pointer, int const*>
-    && std::is_same_v<Dynamic::reference, int&> && std::is_same_v<Dynamic::const_reference, int const&>
-    && std::is_same_v<ReadOnly::pointer, int const*> && std::is_same_v<ReadOnly::reference, int const&>
-    && std::is_same_v<Fixed::reverse_iterator, std::reverse_iterator<Fixed::iterator>>,
+STATIC_CHECK(std::is_same_v<ReadOnly::element_type, int const>&& std::is_same_v<ReadOnly::value_type, int>&& std::is_same_v<Dynamic::size_type, std::size_t>&& std::is_same_v<Dynamic::difference_type, std::ptrdiff_t>&& std::is_same_v<Dynamic::pointer, int*>&& std::is_same_v<Dynamic::const_pointer, int const*>&& std::is_same_v<Dynamic::reference, int&>&& std::is_same_v<Dynamic::const_reference, int const&>&& std::is_same_v<ReadOnly::pointer, int const*>&& std::is_same_v<ReadOnly::reference, int const&>&& std::is_same_v<Fixed::reverse_iterator, std::reverse_iterator<Fixed::iterator>>,
     "span must expose its element, size, reference and iterator types");
-STATIC_CHECK(std::is_nothrow_default_constructible_v<Dynamic> && std::is_nothrow_default_constructible_v<Zero>
-    && !std::is_default_constructible_v<Fixed>, "only empty and dynamic spans can be default constructed");
-STATIC_CHECK(std::is_nothrow_copy_constructible_v<Fixed> && std::is_nothrow_copy_assignable_v<Fixed>
-    && std::is_nothrow_destructible_v<Fixed>, "span copy operations and destruction must be noexcept");
+STATIC_CHECK(std::is_nothrow_default_constructible_v<Dynamic>&& std::is_nothrow_default_constructible_v<Zero> && !std::is_default_constructible_v<Fixed>, "only empty and dynamic spans can be default constructed");
+STATIC_CHECK(std::is_nothrow_copy_constructible_v<Fixed>&& std::is_nothrow_copy_assignable_v<Fixed>&& std::is_nothrow_destructible_v<Fixed>, "span copy operations and destruction must be noexcept");
 
-STATIC_CHECK(ImplicitListConstruction<Dynamic, int*, std::size_t>
-    && ImplicitListConstruction<Dynamic, int*, int*>
-    && !ImplicitListConstruction<Fixed, int*, std::size_t>
-    && !ImplicitListConstruction<Fixed, int*, int*>, "iterator constructors must be explicit for fixed extent");
-STATIC_CHECK(std::is_convertible_v<int(&)[3], Fixed> && std::is_convertible_v<std::array<int, 3>&, Fixed>
-    && std::is_convertible_v<std::array<int, 3> const&, ReadOnlyFixed>
-    && !std::is_constructible_v<Fixed, int(&)[2]> && !std::is_constructible_v<Fixed, std::array<int, 2>&>
-    && !std::is_constructible_v<Fixed, int const(&)[3]>, "array constructors must match extent and qualifications");
-STATIC_CHECK(std::is_convertible_v<Fixed, Dynamic> && std::is_convertible_v<Fixed, ReadOnlyFixed>
-    && std::is_convertible_v<Fixed, ReadOnly> && std::is_convertible_v<Dynamic, ReadOnly>
-    && std::is_nothrow_constructible_v<ReadOnlyFixed, Dynamic> && !std::is_convertible_v<Dynamic, ReadOnlyFixed>
-    && !std::is_constructible_v<Fixed, bys::span<int, 2>> && !std::is_constructible_v<Dynamic, ReadOnly>,
+STATIC_CHECK(ImplicitListConstruction<Dynamic, int*, std::size_t>&& ImplicitListConstruction<Dynamic, int*, int*> && !ImplicitListConstruction<Fixed, int*, std::size_t> && !ImplicitListConstruction<Fixed, int*, int*>, "iterator constructors must be explicit for fixed extent");
+STATIC_CHECK(std::is_convertible_v<int (&)[3], Fixed>&& std::is_convertible_v<std::array<int, 3>&, Fixed>&& std::is_convertible_v<std::array<int, 3> const&, ReadOnlyFixed> && !std::is_constructible_v<Fixed, int (&)[2]> && !std::is_constructible_v<Fixed, std::array<int, 2>&> && !std::is_constructible_v<Fixed, int const (&)[3]>, "array constructors must match extent and qualifications");
+STATIC_CHECK(std::is_convertible_v<Fixed, Dynamic>&& std::is_convertible_v<Fixed, ReadOnlyFixed>&& std::is_convertible_v<Fixed, ReadOnly>&& std::is_convertible_v<Dynamic, ReadOnly>&& std::is_nothrow_constructible_v<ReadOnlyFixed, Dynamic> && !std::is_convertible_v<Dynamic, ReadOnlyFixed> && !std::is_constructible_v<Fixed, bys::span<int, 2>> && !std::is_constructible_v<Dynamic, ReadOnly>,
     "span conversions must respect the extent, constness and explicitness");
-STATIC_CHECK(std::is_convertible_v<Dynamic, bys::span<int const volatile>>
-    && !std::is_constructible_v<Dynamic, bys::span<int volatile>>
-    && !std::is_constructible_v<bys::span<Base>, Derived*, std::size_t>
-    && !std::is_constructible_v<bys::span<Base const>, bys::span<Derived>>
-    && !std::is_constructible_v<Dynamic, short*, short*>, "only qualification conversions may change the element type");
+STATIC_CHECK(std::is_convertible_v<Dynamic, bys::span<int const volatile>> && !std::is_constructible_v<Dynamic, bys::span<int volatile>> && !std::is_constructible_v<bys::span<Base>, Derived*, std::size_t> && !std::is_constructible_v<bys::span<Base const>, bys::span<Derived>> && !std::is_constructible_v<Dynamic, short*, short*>, "only qualification conversions may change the element type");
 
 using UnsizedRange = std::ranges::subrange<int*, std::unreachable_sentinel_t>;
-STATIC_CHECK(std::is_convertible_v<std::vector<int>&, Dynamic> && std::is_constructible_v<Fixed, std::vector<int>&>
-    && !std::is_convertible_v<std::vector<int>&, Fixed>
-    && std::is_constructible_v<ReadOnly, std::vector<int>> && !std::is_constructible_v<Dynamic, std::vector<int>>
-    && !std::is_constructible_v<Dynamic, std::vector<int> const&>
-    && !std::is_constructible_v<Dynamic, std::deque<int>&> && !std::is_constructible_v<ReadOnly, std::vector<bool>&>
-    && !std::is_constructible_v<Dynamic, UnsizedRange>
-    && !std::is_constructible_v<Dynamic, int*, std::unreachable_sentinel_t>,
+STATIC_CHECK(std::is_convertible_v<std::vector<int>&, Dynamic>&& std::is_constructible_v<Fixed, std::vector<int>&> && !std::is_convertible_v<std::vector<int>&, Fixed> && std::is_constructible_v<ReadOnly, std::vector<int>> && !std::is_constructible_v<Dynamic, std::vector<int>> && !std::is_constructible_v<Dynamic, std::vector<int> const&> && !std::is_constructible_v<Dynamic, std::deque<int>&> && !std::is_constructible_v<ReadOnly, std::vector<bool>&> && !std::is_constructible_v<Dynamic, UnsizedRange> && !std::is_constructible_v<Dynamic, int*, std::unreachable_sentinel_t>,
     "range constructors must enforce contiguity, size, borrowing and element compatibility");
 
-STATIC_CHECK(std::ranges::view<Dynamic> && std::ranges::view<Fixed> && std::ranges::view<Zero>
-    && std::ranges::borrowed_range<Dynamic> && std::ranges::borrowed_range<Fixed> && std::ranges::borrowed_range<Zero>
-    && std::ranges::contiguous_range<Fixed const> && std::ranges::sized_range<Fixed const>
-    && std::ranges::common_range<Fixed const>, "span must participate in the C++20 ranges concepts");
+STATIC_CHECK(std::ranges::view<Dynamic>&& std::ranges::view<Fixed>&& std::ranges::view<Zero>&& std::ranges::borrowed_range<Dynamic>&& std::ranges::borrowed_range<Fixed>&& std::ranges::borrowed_range<Zero>&& std::ranges::contiguous_range<Fixed const>&& std::ranges::sized_range<Fixed const>&& std::ranges::common_range<Fixed const>, "span must participate in the C++20 ranges concepts");
 
 STATIC_CHECK([] {
     int items[]{1, 2, 3};
     Fixed const view = items;
-    STATIC_CHECK(std::is_same_v<decltype(view.begin()), Fixed::iterator>
-        && std::is_same_v<decltype(view[0]), int&> && std::is_same_v<decltype(view.front()), int&>
-        && std::is_same_v<decltype(view.back()), int&> && std::is_same_v<decltype(view.data()), int*>,
+    STATIC_CHECK(std::is_same_v<decltype(view.begin()), Fixed::iterator> && std::is_same_v<decltype(view[0]), int&> && std::is_same_v<decltype(view.front()), int&> && std::is_same_v<decltype(view.back()), int&> && std::is_same_v<decltype(view.data()), int*>,
         "const qualification of the view must preserve mutable element access");
-    STATIC_CHECK(noexcept(view.size()) && noexcept(view.size_bytes()) && noexcept(view.empty()) && noexcept(view.data())
-        && noexcept(view.begin()) && noexcept(view.end()) && noexcept(view.rbegin()) && noexcept(view.rend()),
+    STATIC_CHECK(noexcept(view.size()) && noexcept(view.size_bytes()) && noexcept(view.empty()) && noexcept(view.data()) && noexcept(view.begin()) && noexcept(view.end()) && noexcept(view.rbegin()) && noexcept(view.rend()),
         "size, data and iterator queries must be noexcept");
 
     view.front() = 4;
@@ -150,11 +127,9 @@ STATIC_CHECK([] {
     Dynamic copy = view;
     ReadOnlyFixed read_only(copy);
     copy = Dynamic{};
-    return items[0] == 4 && items[2] == 9 && view[1] == 2 && view.back() == 9
-        && view.data() == items && view.end() - view.begin() == 3 && view.rend() - view.rbegin() == 3
-        && view.size() == 3 && view.size_bytes() == sizeof(items) && !view.empty()
-        && read_only.data() == items && read_only.size() == 3 && copy.empty() && copy.data() == nullptr;
-}(), "construction, conversion, element access and iteration must work in constant expressions");
+    return items[0] == 4 && items[2] == 9 && view[1] == 2 && view.back() == 9 && view.data() == items && view.end() - view.begin() == 3 && view.rend() - view.rbegin() == 3 && view.size() == 3 && view.size_bytes() == sizeof(items) && !view.empty() && read_only.data() == items && read_only.size() == 3 && copy.empty() && copy.data() == nullptr;
+}(),
+    "construction, conversion, element access and iteration must work in constant expressions");
 
 TEST_CASE("span.default_and_empty")
 {
@@ -184,9 +159,7 @@ TEST_CASE("span.array_deduction")
     auto array_view = bys::span{array};
     auto const_array_view = bys::span{std::as_const(array)};
     auto empty_view = bys::span{empty};
-    STATIC_CHECK(std::is_same_v<decltype(raw_view), Fixed> && std::is_same_v<decltype(const_view), ReadOnlyFixed>
-        && std::is_same_v<decltype(array_view), Fixed> && std::is_same_v<decltype(const_array_view), ReadOnlyFixed>
-        && std::is_same_v<decltype(empty_view), bys::span<int const, 0>>, "array deduction must retain extent and constness");
+    STATIC_CHECK(std::is_same_v<decltype(raw_view), Fixed> && std::is_same_v<decltype(const_view), ReadOnlyFixed> && std::is_same_v<decltype(array_view), Fixed> && std::is_same_v<decltype(const_array_view), ReadOnlyFixed> && std::is_same_v<decltype(empty_view), bys::span<int const, 0>>, "array deduction must retain extent and constness");
     CHECK(raw_view.data() == items && const_view.data() == read_only);
     CHECK(array_view.data() == array.data() && const_array_view.data() == array.data());
     array_view[1] = 10;

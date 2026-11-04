@@ -1,11 +1,11 @@
-#include <bys/span.hpp>
-#include <bys/test/test.hpp>
-
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <type_traits>
 #include <utility>
+
+#include <bys/span.hpp>
+#include <bys/test/test.hpp>
 
 namespace
 {
@@ -14,7 +14,7 @@ using Dynamic = bys::span<int>;
 using ReadOnly = bys::span<int const, 4>;
 
 template <class S>
-concept HasWritableBytes = requires(S view) { bys::as_writable_bytes(view); };
+concept HasWritableBytes = requires (S view) { bys::as_writable_bytes(view); };
 
 template <class S>
 void check_runtime_subviews(S view)
@@ -44,20 +44,9 @@ void check_runtime_subviews(S view)
 }
 } // namespace
 
-STATIC_CHECK(std::is_same_v<decltype(std::declval<Fixed>().first<0>()), bys::span<int, 0>>
-    && std::is_same_v<decltype(std::declval<Dynamic>().first<2>()), bys::span<int, 2>>
-    && std::is_same_v<decltype(std::declval<Dynamic>().last<2>()), bys::span<int, 2>>
-    && std::is_same_v<decltype(std::declval<Fixed>().last<0>()), bys::span<int, 0>>
-    && std::is_same_v<decltype(std::declval<Fixed>().subspan<1>()), bys::span<int, 3>>
-    && std::is_same_v<decltype(std::declval<Fixed>().subspan<4>()), bys::span<int, 0>>
-    && std::is_same_v<decltype(std::declval<Dynamic>().subspan<1>()), Dynamic>
-    && std::is_same_v<decltype(std::declval<Dynamic>().subspan<1, 2>()), bys::span<int, 2>>
-    && std::is_same_v<decltype(std::declval<ReadOnly>().subspan<1, 2>()), bys::span<int const, 2>>,
+STATIC_CHECK(std::is_same_v<decltype(std::declval<Fixed>().first<0>()), bys::span<int, 0>>&& std::is_same_v<decltype(std::declval<Dynamic>().first<2>()), bys::span<int, 2>>&& std::is_same_v<decltype(std::declval<Dynamic>().last<2>()), bys::span<int, 2>>&& std::is_same_v<decltype(std::declval<Fixed>().last<0>()), bys::span<int, 0>>&& std::is_same_v<decltype(std::declval<Fixed>().subspan<1>()), bys::span<int, 3>>&& std::is_same_v<decltype(std::declval<Fixed>().subspan<4>()), bys::span<int, 0>>&& std::is_same_v<decltype(std::declval<Dynamic>().subspan<1>()), Dynamic>&& std::is_same_v<decltype(std::declval<Dynamic>().subspan<1, 2>()), bys::span<int, 2>>&& std::is_same_v<decltype(std::declval<ReadOnly>().subspan<1, 2>()), bys::span<int const, 2>>,
     "template subviews must calculate their extent and preserve element qualifications");
-STATIC_CHECK(std::is_same_v<decltype(std::declval<Fixed>().first(2)), Dynamic>
-    && std::is_same_v<decltype(std::declval<Fixed>().last(2)), Dynamic>
-    && std::is_same_v<decltype(std::declval<Fixed>().subspan(2)), Dynamic>
-    && std::is_same_v<decltype(std::declval<ReadOnly>().subspan(1, 2)), bys::span<int const>>,
+STATIC_CHECK(std::is_same_v<decltype(std::declval<Fixed>().first(2)), Dynamic>&& std::is_same_v<decltype(std::declval<Fixed>().last(2)), Dynamic>&& std::is_same_v<decltype(std::declval<Fixed>().subspan(2)), Dynamic>&& std::is_same_v<decltype(std::declval<ReadOnly>().subspan(1, 2)), bys::span<int const>>,
     "runtime subviews must have dynamic extent and preserve element qualifications");
 
 STATIC_CHECK([] {
@@ -66,15 +55,9 @@ STATIC_CHECK([] {
     Dynamic const dynamic = fixed;
     auto middle = dynamic.subspan<1, 2>();
     middle.front() = 8;
-    return fixed.first<2>().back() == 8 && fixed.last<2>().front() == 3
-        && fixed.first<0>().data() == items && fixed.last<0>().data() == items + 4
-        && fixed.subspan<1>().size() == 3 && fixed.subspan<4>().data() == items + 4
-        && fixed.subspan<1, 2>().data() == items + 1 && dynamic.subspan<4>().empty()
-        && dynamic.subspan<1>().data() == items + 1 && dynamic.subspan<1>().size() == 3
-        && dynamic.first<2>().back() == 8 && dynamic.last<2>().front() == 3
-        && fixed.first(2).back() == 8 && fixed.last(2).front() == 3
-        && dynamic.subspan(1, 2).back() == 3 && dynamic.subspan(1).back() == 4;
-}(), "subviews must alias the correct part of the original sequence in constant expressions");
+    return fixed.first<2>().back() == 8 && fixed.last<2>().front() == 3 && fixed.first<0>().data() == items && fixed.last<0>().data() == items + 4 && fixed.subspan<1>().size() == 3 && fixed.subspan<4>().data() == items + 4 && fixed.subspan<1, 2>().data() == items + 1 && dynamic.subspan<4>().empty() && dynamic.subspan<1>().data() == items + 1 && dynamic.subspan<1>().size() == 3 && dynamic.first<2>().back() == 8 && dynamic.last<2>().front() == 3 && fixed.first(2).back() == 8 && fixed.last(2).front() == 3 && dynamic.subspan(1, 2).back() == 3 && dynamic.subspan(1).back() == 4;
+}(),
+    "subviews must alias the correct part of the original sequence in constant expressions");
 
 TEST_CASE("span.runtime_subviews")
 {
@@ -104,16 +87,11 @@ TEST_CASE("span.empty_subviews")
     CHECK(at_address.subspan<0, 0>().data() == &item);
 }
 
-STATIC_CHECK(HasWritableBytes<Dynamic> && HasWritableBytes<Fixed>
-    && !HasWritableBytes<ReadOnly> && !HasWritableBytes<bys::span<int const>>,
+STATIC_CHECK(HasWritableBytes<Dynamic>&& HasWritableBytes<Fixed> && !HasWritableBytes<ReadOnly> && !HasWritableBytes<bys::span<int const>>,
     "writable bytes must require mutable elements");
-STATIC_CHECK(std::is_same_v<decltype(bys::as_bytes(std::declval<ReadOnly>())), bys::span<std::byte const, 4 * sizeof(int)>>
-    && std::is_same_v<decltype(bys::as_bytes(std::declval<Dynamic>())), bys::span<std::byte const>>
-    && std::is_same_v<decltype(bys::as_writable_bytes(std::declval<Fixed>())), bys::span<std::byte, 4 * sizeof(int)>>
-    && std::is_same_v<decltype(bys::as_writable_bytes(std::declval<Dynamic>())), bys::span<std::byte>>,
+STATIC_CHECK(std::is_same_v<decltype(bys::as_bytes(std::declval<ReadOnly>())), bys::span<std::byte const, 4 * sizeof(int)>>&& std::is_same_v<decltype(bys::as_bytes(std::declval<Dynamic>())), bys::span<std::byte const>>&& std::is_same_v<decltype(bys::as_writable_bytes(std::declval<Fixed>())), bys::span<std::byte, 4 * sizeof(int)>>&& std::is_same_v<decltype(bys::as_writable_bytes(std::declval<Dynamic>())), bys::span<std::byte>>,
     "byte views must preserve dynamic extent or scale a fixed extent by element size");
-STATIC_CHECK(noexcept(bys::as_bytes(std::declval<ReadOnly>()))
-    && noexcept(bys::as_writable_bytes(std::declval<Fixed>())), "byte views must be noexcept");
+STATIC_CHECK(noexcept(bys::as_bytes(std::declval<ReadOnly>())) && noexcept(bys::as_writable_bytes(std::declval<Fixed>())), "byte views must be noexcept");
 
 TEST_CASE("span.readable_bytes")
 {

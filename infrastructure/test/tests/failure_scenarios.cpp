@@ -1,7 +1,7 @@
-#include <bys/test/test.hpp>
-
 #include <iostream>
 #include <stdexcept>
+
+#include <bys/test/test.hpp>
 
 namespace
 {
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
     {
         return 3;
     }
-    const std::string_view scenario = argv[1];
+    std::string_view const scenario = argv[1];
     if (scenario == "duplicate")
     {
         add("duplicate", pass);
@@ -55,17 +55,29 @@ int main(int argc, char* argv[])
     {
         add("z.after", pass);
         if (scenario == "pass")
+        {
             add("a.first", pass);
+        }
         else if (scenario == "check")
+        {
             add("a.first", failed_check);
+        }
         else if (scenario == "require")
+        {
             add("a.first", failed_require);
+        }
         else if (scenario == "exception")
+        {
             add("a.first", unexpected_exception);
+        }
         else if (scenario == "unknown-exception")
+        {
             add("a.first", unknown_exception);
+        }
         else
+        {
             return 3;
+        }
     }
 
     std::vector<std::string_view> arguments;

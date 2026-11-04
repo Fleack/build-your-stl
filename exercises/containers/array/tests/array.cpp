@@ -1,6 +1,3 @@
-#include <bys/array.hpp>
-#include <bys/test/test.hpp>
-
 #include <algorithm>
 #include <compare>
 #include <cstddef>
@@ -13,19 +10,26 @@
 #include <type_traits>
 #include <utility>
 
+#include <bys/array.hpp>
+#include <bys/test/test.hpp>
+
 namespace
 {
 using Array = bys::array<int, 3>;
 
 struct NoDefault
 {
-    explicit NoDefault(int value) : value(value) {}
+    explicit NoDefault(int value)
+        : value(value)
+    {}
     int value;
 };
 
 struct AdlSwappable
 {
-    explicit AdlSwappable(int value) : value(value) {}
+    explicit AdlSwappable(int value)
+        : value(value)
+    {}
     AdlSwappable(AdlSwappable const&) = delete;
     AdlSwappable& operator=(AdlSwappable const&) = delete;
 
@@ -37,7 +41,8 @@ struct AdlSwappable
     int value;
 };
 
-struct SwapError {};
+struct SwapError
+{};
 
 struct ThrowingSwap
 {
@@ -58,50 +63,32 @@ struct LessOnly
 };
 
 template <bys::array<int, 2> Values>
-struct ArrayTag {};
+struct ArrayTag
+{};
 } // namespace
 
 STATIC_CHECK(std::is_aggregate_v<Array>, "array must be an aggregate");
-STATIC_CHECK(std::is_same_v<Array::value_type, int> && std::is_same_v<Array::size_type, std::size_t>
-    && std::is_same_v<Array::difference_type, std::ptrdiff_t>, "array must expose the standard value and size types");
-STATIC_CHECK(std::is_same_v<Array::reference, int&> && std::is_same_v<Array::const_reference, int const&>
-    && std::is_same_v<Array::pointer, int*> && std::is_same_v<Array::const_pointer, int const*>,
+STATIC_CHECK(std::is_same_v<Array::value_type, int>&& std::is_same_v<Array::size_type, std::size_t>&& std::is_same_v<Array::difference_type, std::ptrdiff_t>, "array must expose the standard value and size types");
+STATIC_CHECK(std::is_same_v<Array::reference, int&>&& std::is_same_v<Array::const_reference, int const&>&& std::is_same_v<Array::pointer, int*>&& std::is_same_v<Array::const_pointer, int const*>,
     "array must expose the standard reference and pointer types");
-STATIC_CHECK(std::ranges::contiguous_range<Array> && std::ranges::contiguous_range<Array const>,
+STATIC_CHECK(std::ranges::contiguous_range<Array>&& std::ranges::contiguous_range<Array const>,
     "mutable and const arrays must be contiguous ranges");
-STATIC_CHECK(std::is_same_v<Array::iterator, std::ranges::iterator_t<Array>>
-    && std::is_same_v<Array::const_iterator, std::ranges::iterator_t<Array const>>, "begin must return the declared iterator types");
-STATIC_CHECK(std::is_same_v<Array::reverse_iterator, std::reverse_iterator<Array::iterator>>
-    && std::is_same_v<Array::const_reverse_iterator, std::reverse_iterator<Array::const_iterator>>,
+STATIC_CHECK(std::is_same_v<Array::iterator, std::ranges::iterator_t<Array>>&& std::is_same_v<Array::const_iterator, std::ranges::iterator_t<Array const>>, "begin must return the declared iterator types");
+STATIC_CHECK(std::is_same_v<Array::reverse_iterator, std::reverse_iterator<Array::iterator>>&& std::is_same_v<Array::const_reverse_iterator, std::reverse_iterator<Array::const_iterator>>,
     "array must expose the standard reverse iterator types");
-STATIC_CHECK(std::is_same_v<ArrayTag<bys::array<int, 2>{1, 2}>, ArrayTag<bys::array<int, 2>{1, 2}>>
-    && !std::is_same_v<ArrayTag<bys::array<int, 2>{1, 2}>, ArrayTag<bys::array<int, 2>{2, 1}>>,
+STATIC_CHECK(std::is_same_v<ArrayTag<bys::array<int, 2>{1, 2}>, ArrayTag<bys::array<int, 2>{1, 2}>> && !std::is_same_v<ArrayTag<bys::array<int, 2>{1, 2}>, ArrayTag<bys::array<int, 2>{2, 1}>>,
     "arrays of structural elements must be usable as template arguments");
 
 STATIC_CHECK([] {
     Array items{1, 2};
     auto const& view = items;
-    STATIC_CHECK(std::is_same_v<decltype(items[0]), int&> && std::is_same_v<decltype(view[0]), int const&>
-        && std::is_same_v<decltype(items.at(0)), int&> && std::is_same_v<decltype(view.at(0)), int const&>
-        && std::is_same_v<decltype(items.front()), int&> && std::is_same_v<decltype(view.front()), int const&>
-        && std::is_same_v<decltype(items.back()), int&> && std::is_same_v<decltype(view.back()), int const&>,
+    STATIC_CHECK(std::is_same_v<decltype(items[0]), int&> && std::is_same_v<decltype(view[0]), int const&> && std::is_same_v<decltype(items.at(0)), int&> && std::is_same_v<decltype(view.at(0)), int const&> && std::is_same_v<decltype(items.front()), int&> && std::is_same_v<decltype(view.front()), int const&> && std::is_same_v<decltype(items.back()), int&> && std::is_same_v<decltype(view.back()), int const&>,
         "element access must preserve constness and return references");
     STATIC_CHECK(std::is_same_v<decltype(items.data()), int*> && std::is_same_v<decltype(view.data()), int const*>,
         "data must return a pointer with the matching const qualification");
-    STATIC_CHECK(noexcept(items.size()) && noexcept(items.max_size()) && noexcept(items.empty())
-        && noexcept(items.data()) && noexcept(view.data())
-        && noexcept(items.begin()) && noexcept(view.begin()) && noexcept(items.end()) && noexcept(view.end())
-        && noexcept(items.cbegin()) && noexcept(items.cend())
-        && noexcept(items.rbegin()) && noexcept(view.rbegin()) && noexcept(items.rend()) && noexcept(view.rend())
-        && noexcept(items.crbegin()) && noexcept(items.crend()), "capacity, data and iterator access must be noexcept");
+    STATIC_CHECK(noexcept(items.size()) && noexcept(items.max_size()) && noexcept(items.empty()) && noexcept(items.data()) && noexcept(view.data()) && noexcept(items.begin()) && noexcept(view.begin()) && noexcept(items.end()) && noexcept(view.end()) && noexcept(items.cbegin()) && noexcept(items.cend()) && noexcept(items.rbegin()) && noexcept(view.rbegin()) && noexcept(items.rend()) && noexcept(view.rend()) && noexcept(items.crbegin()) && noexcept(items.crend()), "capacity, data and iterator access must be noexcept");
 
-    if (items.empty() || items.size() != 3 || items.max_size() != 3 || view.back() != 0
-        || items.data() != &items.front() || view.data() != &view.front()
-        || items.end() - items.begin() != 3 || view.end() - view.begin() != 3
-        || items.cbegin() != view.begin() || items.cend() != view.end()
-        || *items.rbegin() != 0 || items.rend() - items.rbegin() != 3
-        || *view.rbegin() != 0 || view.rend() - view.rbegin() != 3
-        || items.crbegin() != view.rbegin() || items.crend() != view.rend())
+    if (items.empty() || items.size() != 3 || items.max_size() != 3 || view.back() != 0 || items.data() != &items.front() || view.data() != &view.front() || items.end() - items.begin() != 3 || view.end() - view.begin() != 3 || items.cbegin() != view.begin() || items.cend() != view.end() || *items.rbegin() != 0 || items.rend() - items.rbegin() != 3 || *view.rbegin() != 0 || view.rend() - view.rbegin() != 3 || items.crbegin() != view.rbegin() || items.crend() != view.rend())
     {
         return false;
     }
@@ -116,7 +103,8 @@ STATIC_CHECK([] {
     other.fill(9);
     items.swap(other);
     return items == Array{9, 9, 9} && other == Array{7, 2, 0};
-}(), "array operations must work in constant expressions");
+}(),
+    "array operations must work in constant expressions");
 
 TEST_CASE("array.aggregate_initialization")
 {

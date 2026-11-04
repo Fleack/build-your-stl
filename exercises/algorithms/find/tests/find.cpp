@@ -37,7 +37,8 @@ struct CountedElement
 STATIC_CHECK([] {
     int items[]{1, 2, 3};
     return bys::find(items, items + 3, 2) == items + 1;
-}(), "bys::find must work in a constant expression");
+}(),
+    "bys::find must work in a constant expression");
 
 TEST_CASE("find.empty")
 {

@@ -43,7 +43,8 @@ STATIC_CHECK(std::is_same_v<decltype(bys::count(StreamIterator{}, StreamIterator
 STATIC_CHECK([] {
     int items[]{1, 2, 1};
     return bys::count(items, items + 3, 1) == 2;
-}(), "bys::count must work in a constant expression");
+}(),
+    "bys::count must work in a constant expression");
 
 TEST_CASE("count.empty")
 {

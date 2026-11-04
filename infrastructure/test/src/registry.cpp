@@ -30,7 +30,9 @@ TestContext& current_context()
 
 ContextScope::ContextScope(TestContext& context)
     : previous_(active_context)
-{ active_context = &context; }
+{
+    active_context = &context;
+}
 
 ContextScope::~ContextScope() { active_context = previous_; }
 

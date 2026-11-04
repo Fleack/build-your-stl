@@ -1,11 +1,11 @@
-#include <bys/test/test.hpp>
-
 #include <stdexcept>
+
+#include <bys/test/test.hpp>
 
 TEST_CASE("exceptions.expected_types")
 {
     int calls = 0;
-    const auto throws = [&]() {
+    auto const throws = [&]() {
         ++calls;
         throw std::runtime_error("expected");
     };
@@ -45,7 +45,7 @@ TEST_CASE("exceptions.require_throws_stops")
             REQUIRE_THROWS_AS(static_cast<void>(0), int);
             continued = true;
         }
-        catch (const bys::test::detail::AbortTest&)
+        catch (bys::test::detail::AbortTest const&)
         {
         }
     }
@@ -63,7 +63,7 @@ TEST_CASE("exceptions.internal_abort_is_not_expected_exception")
         {
             CHECK_THROWS_AS([]() { REQUIRE(false); }(), bys::test::detail::AbortTest);
         }
-        catch (const bys::test::detail::AbortTest&)
+        catch (bys::test::detail::AbortTest const&)
         {
             aborted = true;
         }

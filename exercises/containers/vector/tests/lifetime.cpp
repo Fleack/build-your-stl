@@ -1,13 +1,14 @@
-#include <bys/vector.hpp>
-#include <bys/test/test.hpp>
-
 #include <cstdint>
 #include <memory>
 #include <utility>
 
+#include <bys/test/test.hpp>
+#include <bys/vector.hpp>
+
 namespace
 {
-struct ElementError {};
+struct ElementError
+{};
 
 struct Counts
 {
@@ -21,17 +22,23 @@ struct Element
     Counts* counts;
     int value;
 
-    Element(Counts& counts, int value) : counts(&counts), value(value)
+    Element(Counts& counts, int value)
+        : counts(&counts)
+        , value(value)
     {
         ++counts.live;
     }
 
-    Element(Element const& other) : counts(other.counts), value(other.value)
+    Element(Element const& other)
+        : counts(other.counts)
+        , value(other.value)
     {
         record_transfer();
     }
 
-    Element(Element&& other) : counts(other.counts), value(other.value)
+    Element(Element&& other)
+        : counts(other.counts)
+        , value(other.value)
     {
         record_transfer();
         other.value = -1;

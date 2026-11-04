@@ -1,6 +1,3 @@
-#include <bys/vector.hpp>
-#include <bys/test/test.hpp>
-
 #include <algorithm>
 #include <array>
 #include <compare>
@@ -14,6 +11,9 @@
 #include <type_traits>
 #include <utility>
 
+#include <bys/test/test.hpp>
+#include <bys/vector.hpp>
+
 namespace
 {
 using Vector = bys::vector<int>;
@@ -25,23 +25,15 @@ struct Node
 };
 } // namespace
 
-STATIC_CHECK(std::is_same_v<Vector::value_type, int> && std::is_same_v<Vector::allocator_type, std::allocator<int>>
-    && std::is_same_v<Vector::pointer, int*> && std::is_same_v<Vector::const_pointer, int const*>
-    && std::is_same_v<Vector::reference, int&> && std::is_same_v<Vector::const_reference, int const&>,
+STATIC_CHECK(std::is_same_v<Vector::value_type, int>&& std::is_same_v<Vector::allocator_type, std::allocator<int>>&& std::is_same_v<Vector::pointer, int*>&& std::is_same_v<Vector::const_pointer, int const*>&& std::is_same_v<Vector::reference, int&>&& std::is_same_v<Vector::const_reference, int const&>,
     "vector must expose its element and allocator types");
-STATIC_CHECK(std::is_unsigned_v<Vector::size_type> && std::is_signed_v<Vector::difference_type>
-    && std::is_same_v<Vector::iterator, std::ranges::iterator_t<Vector>>
-    && std::is_same_v<Vector::const_iterator, std::ranges::iterator_t<Vector const>>
-    && std::is_same_v<Vector::reverse_iterator, std::reverse_iterator<Vector::iterator>>
-    && std::is_same_v<Vector::const_reverse_iterator, std::reverse_iterator<Vector::const_iterator>>,
+STATIC_CHECK(std::is_unsigned_v<Vector::size_type>&& std::is_signed_v<Vector::difference_type>&& std::is_same_v<Vector::iterator, std::ranges::iterator_t<Vector>>&& std::is_same_v<Vector::const_iterator, std::ranges::iterator_t<Vector const>>&& std::is_same_v<Vector::reverse_iterator, std::reverse_iterator<Vector::iterator>>&& std::is_same_v<Vector::const_reverse_iterator, std::reverse_iterator<Vector::const_iterator>>,
     "vector must expose its size and iterator types");
-STATIC_CHECK(std::ranges::contiguous_range<Vector> && std::ranges::contiguous_range<Vector const>,
+STATIC_CHECK(std::ranges::contiguous_range<Vector>&& std::ranges::contiguous_range<Vector const>,
     "mutable and const vectors must be contiguous ranges");
-STATIC_CHECK(std::is_same_v<decltype(bys::vector{1, 2}), Vector>
-    && std::is_same_v<decltype(bys::vector(std::declval<int*>(), std::declval<int*>())), Vector>,
+STATIC_CHECK(std::is_same_v<decltype(bys::vector{1, 2}), Vector>&& std::is_same_v<decltype(bys::vector(std::declval<int*>(), std::declval<int*>())), Vector>,
     "deduction must work for initializer lists and iterator pairs");
-STATIC_CHECK(std::is_nothrow_default_constructible_v<Vector> && std::is_nothrow_move_constructible_v<Vector>
-    && std::is_nothrow_move_assignable_v<Vector>, "default-allocator construction and moves must be noexcept");
+STATIC_CHECK(std::is_nothrow_default_constructible_v<Vector>&& std::is_nothrow_move_constructible_v<Vector>&& std::is_nothrow_move_assignable_v<Vector>, "default-allocator construction and moves must be noexcept");
 
 STATIC_CHECK([] {
     Vector items{1, 3};
@@ -51,9 +43,9 @@ STATIC_CHECK([] {
     items.pop_back();
     Vector copy = items;
     copy.resize(4, 5);
-    return copy.size() == 4 && copy.capacity() >= copy.size() && copy.at(1) == 2
-        && copy.data()[2] == 3 && *copy.crbegin() == 5 && items.back() == 3;
-}(), "construction, allocation, modifiers and access must work in constant expressions");
+    return copy.size() == 4 && copy.capacity() >= copy.size() && copy.at(1) == 2 && copy.data()[2] == 3 && *copy.crbegin() == 5 && items.back() == 3;
+}(),
+    "construction, allocation, modifiers and access must work in constant expressions");
 
 TEST_CASE("vector.construction")
 {
@@ -121,18 +113,9 @@ TEST_CASE("vector.access_and_iterators")
 {
     Vector items{4, 1, 3};
     auto const& view = items;
-    STATIC_CHECK(std::is_same_v<decltype(items[0]), int&> && std::is_same_v<decltype(view[0]), int const&>
-        && std::is_same_v<decltype(items.at(0)), int&> && std::is_same_v<decltype(view.at(0)), int const&>
-        && std::is_same_v<decltype(items.front()), int&> && std::is_same_v<decltype(view.front()), int const&>
-        && std::is_same_v<decltype(items.back()), int&> && std::is_same_v<decltype(view.back()), int const&>
-        && std::is_same_v<decltype(items.data()), int*> && std::is_same_v<decltype(view.data()), int const*>,
+    STATIC_CHECK(std::is_same_v<decltype(items[0]), int&> && std::is_same_v<decltype(view[0]), int const&> && std::is_same_v<decltype(items.at(0)), int&> && std::is_same_v<decltype(view.at(0)), int const&> && std::is_same_v<decltype(items.front()), int&> && std::is_same_v<decltype(view.front()), int const&> && std::is_same_v<decltype(items.back()), int&> && std::is_same_v<decltype(view.back()), int const&> && std::is_same_v<decltype(items.data()), int*> && std::is_same_v<decltype(view.data()), int const*>,
         "element access must preserve constness and return references or pointers");
-    STATIC_CHECK(noexcept(view.data()) && noexcept(items.data()) && noexcept(view.size()) && noexcept(view.capacity())
-        && noexcept(view.empty()) && noexcept(view.max_size()) && noexcept(view.get_allocator())
-        && noexcept(items.begin()) && noexcept(view.begin()) && noexcept(items.end()) && noexcept(view.end())
-        && noexcept(items.cbegin()) && noexcept(items.cend())
-        && noexcept(items.rbegin()) && noexcept(view.rbegin()) && noexcept(items.rend()) && noexcept(view.rend())
-        && noexcept(items.crbegin()) && noexcept(items.crend()), "capacity, data and iterator queries must be noexcept");
+    STATIC_CHECK(noexcept(view.data()) && noexcept(items.data()) && noexcept(view.size()) && noexcept(view.capacity()) && noexcept(view.empty()) && noexcept(view.max_size()) && noexcept(view.get_allocator()) && noexcept(items.begin()) && noexcept(view.begin()) && noexcept(items.end()) && noexcept(view.end()) && noexcept(items.cbegin()) && noexcept(items.cend()) && noexcept(items.rbegin()) && noexcept(view.rbegin()) && noexcept(items.rend()) && noexcept(view.rend()) && noexcept(items.crbegin()) && noexcept(items.crend()), "capacity, data and iterator queries must be noexcept");
 
     std::ranges::sort(items);
     items.at(1) = 2;

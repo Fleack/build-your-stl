@@ -1,31 +1,24 @@
-#include <bys/array.hpp>
-#include <bys/test/test.hpp>
-
 #include <memory>
 #include <string>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 
+#include <bys/array.hpp>
+#include <bys/test/test.hpp>
+
 namespace
 {
 using Array = bys::array<int, 2>;
 } // namespace
 
-STATIC_CHECK(std::is_same_v<decltype(bys::array{1}), bys::array<int, 1>>
-    && std::is_same_v<decltype(bys::array{1, 2}), Array>, "deduction must preserve the element type and infer the size");
-STATIC_CHECK(std::tuple_size_v<Array> == 2 && std::tuple_size_v<Array const> == 2
-    && std::tuple_size_v<bys::array<int, 0>> == 0, "tuple_size must match the array size");
-STATIC_CHECK(std::is_same_v<std::tuple_element_t<1, Array>, int>
-    && std::is_same_v<std::tuple_element_t<1, Array const>, int const>, "tuple_element must preserve the element type and constness");
+STATIC_CHECK(std::is_same_v<decltype(bys::array{1}), bys::array<int, 1>>&& std::is_same_v<decltype(bys::array{1, 2}), Array>, "deduction must preserve the element type and infer the size");
+STATIC_CHECK(std::tuple_size_v<Array> == 2 && std::tuple_size_v<Array const> == 2 && std::tuple_size_v<bys::array<int, 0>> == 0, "tuple_size must match the array size");
+STATIC_CHECK(std::is_same_v<std::tuple_element_t<1, Array>, int>&& std::is_same_v<std::tuple_element_t<1, Array const>, int const>, "tuple_element must preserve the element type and constness");
 
-STATIC_CHECK(std::is_same_v<decltype(bys::get<0>(std::declval<Array&>())), int&>
-    && std::is_same_v<decltype(bys::get<0>(std::declval<Array const&>())), int const&>
-    && std::is_same_v<decltype(bys::get<0>(std::declval<Array&&>())), int&&>
-    && std::is_same_v<decltype(bys::get<0>(std::declval<Array const&&>())), int const&&>,
+STATIC_CHECK(std::is_same_v<decltype(bys::get<0>(std::declval<Array&>())), int&>&& std::is_same_v<decltype(bys::get<0>(std::declval<Array const&>())), int const&>&& std::is_same_v<decltype(bys::get<0>(std::declval<Array&&>())), int&&>&& std::is_same_v<decltype(bys::get<0>(std::declval<Array const&&>())), int const&&>,
     "get must preserve constness and value category");
-STATIC_CHECK(noexcept(bys::get<0>(std::declval<Array&>())) && noexcept(bys::get<0>(std::declval<Array const&>()))
-    && noexcept(bys::get<0>(std::declval<Array&&>())) && noexcept(bys::get<0>(std::declval<Array const&&>())),
+STATIC_CHECK(noexcept(bys::get<0>(std::declval<Array&>())) && noexcept(bys::get<0>(std::declval<Array const&>())) && noexcept(bys::get<0>(std::declval<Array&&>())) && noexcept(bys::get<0>(std::declval<Array const&&>())),
     "all get overloads must be noexcept");
 
 STATIC_CHECK([] {
@@ -35,7 +28,8 @@ STATIC_CHECK([] {
     auto& [first, second] = items;
     first = 7;
     return source[0] == 4 && bys::get<0>(items) == 7 && second == 5 && bys::get<1>(std::as_const(items)) == 5;
-}(), "to_array, get and structured bindings must work in constant expressions");
+}(),
+    "to_array, get and structured bindings must work in constant expressions");
 
 TEST_CASE("array.get_and_structured_bindings")
 {
