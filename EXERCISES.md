@@ -34,7 +34,7 @@
 
 | Exercise | What you will learn | Status |
 | --- | --- | --- |
-| `array` | Build a fixed-size container and its iterators | Planned |
+| `array` | Build a fixed-size container and its iterators | [Open exercise](exercises/containers/array/README.md) |
 | `vector` | Manage dynamic storage and element lifetimes | Planned |
 
 ## Views
