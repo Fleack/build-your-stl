@@ -35,13 +35,13 @@
 | Exercise | What you will learn | Status |
 | --- | --- | --- |
 | `array` | Build a fixed-size container and its iterators | [Open exercise](exercises/containers/array/README.md) |
-| `vector` | Manage dynamic storage and element lifetimes | Planned |
+| `vector` | Manage dynamic storage and element lifetimes | [Open exercise](exercises/containers/vector/README.md) |
 
 ## Views
 
 | Exercise | What you will learn | Status |
 | --- | --- | --- |
-| `span` | Represent a contiguous range without owning it | Planned |
+| `span` | Represent a contiguous range without owning it | [Open exercise](exercises/views/span/README.md) |
 | `string_view` | Work with character sequences without owning them | Planned |
 
 ## Memory
