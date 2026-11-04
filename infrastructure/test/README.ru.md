@@ -65,9 +65,11 @@ TEST_CASE("vector.access")
 
 ## Запуск
 
-Соберите проект по инструкции [быстрого старта](../../README.ru.md#быстрый-старт), затем выполните из корня проекта:
+После подключения примера соберите и запустите его из корня проекта.
 
 ```sh
+cmake -S . -B out/Debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build out/Debug --target example_tests
 ./out/Debug/example_tests
 ./out/Debug/example_tests --list
 ./out/Debug/example_tests --filter vector.
@@ -97,5 +99,15 @@ Checks: 2 passed, 1 failed
 | `0` | Все выбранные тесты прошли либо выведены список тестов или справка |
 | `1` | Тест завершился с ошибкой |
 | `2` | Неверные параметры, нет подходящих тестов или недопустимые имена тестов |
+
+## Самопроверка фреймворка
+
+Запустите собственные тесты фреймворка из корня проекта.
+
+```sh
+cmake -S . -B out/Debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build out/Debug --parallel
+ctest --test-dir out/Debug --output-on-failure
+```
 
 [Вернуться к проекту](../../README.ru.md)

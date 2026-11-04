@@ -7,28 +7,29 @@ Exercises are independent and grouped by topic.
 
 **[Browse exercises](EXERCISES.md)**
 
-## How it works
-
-1. Choose an exercise.
-2. Read its requirements and linked documentation.
-3. Write your implementation.
-4. Run the tests.
-5. Compare performance when a benchmark is provided.
-
 ## Quick start
 
-You need Linux or WSL, a C++20 compiler, CMake 3.20 or later, and a build tool such as Make or Ninja.
-Run these commands from the project root to build and test the test framework:
+You need Linux or WSL, Git, a C++20 compiler, CMake 3.20 or later, and Make or Ninja.
+
+Clone the repository and open its directory.
 
 ```sh
-cmake -S . -B out/Debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build out/Debug --parallel
-ctest --test-dir out/Debug --output-on-failure
+git clone https://github.com/Fleack/build-your-stl.git
+cd build-your-stl
 ```
+
+Start with the [`a + b` warm-up](exercises/warmup/add/README.md). Build and run its tests from the repository root. The tests will fail with the starter code.
+
+```sh
+cmake -S . -B out/add
+cmake --build out/add --target add_tests
+./out/add/exercises/warmup/add/add_tests
+```
+
+Implement `bys::add` in [`add.hpp`](exercises/warmup/add/include/bys/add.hpp), then rebuild and rerun the tests. When the summary shows `0 failed`, move on to [`bys::find`](exercises/algorithms/find/README.md).
 
 ## Documentation
 
-- [Exercise catalog](EXERCISES.md)
 - [Test framework](infrastructure/test/README.md)
 
 Inspired by [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x).

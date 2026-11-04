@@ -2,6 +2,12 @@
 
 # Exercises
 
+## Warm-up
+
+| Exercise | What you will learn | Status |
+| --- | --- | --- |
+| `a + b` | Build a target and run its tests | [Start here](exercises/warmup/add/README.md) |
+
 ## Type traits
 
 | Exercise | What you will learn | Status |

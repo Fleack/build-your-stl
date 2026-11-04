@@ -7,28 +7,29 @@
 
 **[Каталог заданий](EXERCISES.ru.md)**
 
-## Как проходить задания
-
-1. Выберите задание.
-2. Прочитайте условие и документацию по ссылкам.
-3. Напишите реализацию.
-4. Запустите тесты.
-5. Сравните производительность, если предусмотрен бенчмарк.
-
 ## Быстрый старт
 
-Нужны Linux или WSL, компилятор C++20, CMake 3.20 или новее и средство сборки, например Make или Ninja.
-Выполните команды из корня проекта для сборки и проверки тестового фреймворка:
+Нужны Linux или WSL, Git, компилятор с поддержкой C++20, CMake 3.20 или новее и Make или Ninja.
+
+Клонируйте репозиторий и перейдите в его каталог.
 
 ```sh
-cmake -S . -B out/Debug -DCMAKE_BUILD_TYPE=Debug
-cmake --build out/Debug --parallel
-ctest --test-dir out/Debug --output-on-failure
+git clone https://github.com/Fleack/build-your-stl.git
+cd build-your-stl
 ```
+
+Начните с [разминки `a + b`](exercises/warmup/add/README.ru.md). Соберите и запустите её тесты из корня репозитория. На заготовке тесты завершатся с ошибкой.
+
+```sh
+cmake -S . -B out/add
+cmake --build out/add --target add_tests
+./out/add/exercises/warmup/add/add_tests
+```
+
+Реализуйте `bys::add` в [`add.hpp`](exercises/warmup/add/include/bys/add.hpp), затем снова соберите и запустите тесты. Когда в итоговой строке появится `0 failed`, переходите к [`bys::find`](exercises/algorithms/find/README.ru.md).
 
 ## Документация
 
-- [Каталог заданий](EXERCISES.ru.md)
 - [Тестовый фреймворк](infrastructure/test/README.ru.md)
 
 Источник идеи — [build-your-own-x](https://github.com/codecrafters-io/build-your-own-x).

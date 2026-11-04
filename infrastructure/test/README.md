@@ -65,9 +65,11 @@ TEST_CASE("vector.access")
 
 ## Run tests
 
-Build the project using the [quick start](../../README.md#quick-start), then run from the project root:
+After adding the example target, build and run it from the project root.
 
 ```sh
+cmake -S . -B out/Debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build out/Debug --target example_tests
 ./out/Debug/example_tests
 ./out/Debug/example_tests --list
 ./out/Debug/example_tests --filter vector.
@@ -97,5 +99,15 @@ The report points to the file and line of the failed assertion.
 | `0` | All selected tests passed, or the test list or help was shown |
 | `1` | A test failed |
 | `2` | Invalid arguments, no matching tests, or invalid test names |
+
+## Check the framework
+
+Run the framework's own tests from the project root.
+
+```sh
+cmake -S . -B out/Debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build out/Debug --parallel
+ctest --test-dir out/Debug --output-on-failure
+```
 
 [Back to the project](../../README.md)
