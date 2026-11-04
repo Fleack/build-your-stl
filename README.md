@@ -1,6 +1,6 @@
 [English](README.md) | [Русский](README.ru.md)
 
-# build-your-std
+# build-your-stl
 
 Learn how the C++ standard library works by implementing its components yourself.
 Exercises are independent and grouped by topic.

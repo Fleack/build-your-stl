@@ -2,7 +2,7 @@
 
 # Test framework
 
-A small C++20 test framework for build-your-std.
+A small C++20 test framework for build-your-stl.
 
 ## Add a test target
 
