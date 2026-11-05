@@ -1,6 +1,10 @@
+#include <deque>
+#include <forward_list>
 #include <iterator>
+#include <list>
 #include <sstream>
 #include <type_traits>
+#include <vector>
 
 #include <bys/equal.hpp>
 #include <bys/test/test.hpp>
@@ -20,6 +24,64 @@ struct CountedElement
         return value == other;
     }
 };
+
+template <typename LeftRange, typename RightRange>
+void check_iterator_pair()
+{
+    LeftRange const left{1, 2, 3};
+    LeftRange const empty_left;
+    RightRange const right{1, 2, 3};
+    RightRange const different_first{9, 2, 3};
+    RightRange const different_middle{1, 9, 3};
+    RightRange const different_last{1, 2, 9};
+    RightRange const shorter{1, 2};
+    RightRange const longer{1, 2, 3, 4};
+    RightRange const empty_right;
+
+    CHECK(bys::equal(left.begin(), left.end(), right.begin(), right.end()));
+    CHECK_FALSE(bys::equal(left.begin(), left.end(), different_first.begin(), different_first.end()));
+    CHECK_FALSE(bys::equal(left.begin(), left.end(), different_middle.begin(), different_middle.end()));
+    CHECK_FALSE(bys::equal(left.begin(), left.end(), different_last.begin(), different_last.end()));
+    CHECK_FALSE(bys::equal(left.begin(), left.end(), shorter.begin(), shorter.end()));
+    CHECK_FALSE(bys::equal(left.begin(), left.end(), longer.begin(), longer.end()));
+    CHECK(bys::equal(empty_left.begin(), empty_left.end(), empty_right.begin(), empty_right.end()));
+    CHECK_FALSE(bys::equal(empty_left.begin(), empty_left.end(), right.begin(), right.end()));
+    CHECK_FALSE(bys::equal(left.begin(), left.end(), empty_right.begin(), empty_right.end()));
+    CHECK(bys::equal(std::next(left.begin()), left.end(), std::next(right.begin()), right.end()));
+    CHECK(bys::equal(left.begin(), std::next(left.begin(), 2), longer.begin(), std::next(longer.begin(), 2)));
+}
+
+template <typename LeftRange>
+void check_iterator_pairs()
+{
+    check_iterator_pair<LeftRange, std::forward_list<int>>();
+    check_iterator_pair<LeftRange, std::list<int>>();
+    check_iterator_pair<LeftRange, std::deque<int>>();
+    check_iterator_pair<LeftRange, std::vector<int>>();
+}
+
+template <typename Range>
+void check_stream_iterator_pair()
+{
+    auto const check = [](char const* data, Range const& items, bool expected) {
+        std::istringstream left(data);
+        std::istringstream right(data);
+        CHECK_EQ(bys::equal(StreamIterator{left}, StreamIterator{}, items.begin(), items.end()), expected);
+        CHECK_EQ(bys::equal(items.begin(), items.end(), StreamIterator{right}, StreamIterator{}), expected);
+    };
+
+    Range const items{4, 8, 15};
+    Range const empty;
+    check("4 8 15", items, true);
+    check("9 8 15", items, false);
+    check("4 9 15", items, false);
+    check("4 8 9", items, false);
+    check("4 8", items, false);
+    check("4 8 15 16", items, false);
+    check("", items, false);
+    check("4 8 15", empty, false);
+    check("", empty, true);
+}
 } // namespace
 
 STATIC_CHECK([] {
@@ -51,6 +113,34 @@ TEST_CASE("equal.different_elements")
     int const left[]{1, 2, 3};
     int const right[]{1, 3, 2};
     CHECK_FALSE(bys::equal(left, left + 3, right, right + 3));
+}
+
+TEST_CASE("equal.forward_iterator_pairs")
+{
+    check_iterator_pairs<std::forward_list<int>>();
+}
+
+TEST_CASE("equal.bidirectional_iterator_pairs")
+{
+    check_iterator_pairs<std::list<int>>();
+}
+
+TEST_CASE("equal.random_access_iterator_pairs")
+{
+    check_iterator_pairs<std::deque<int>>();
+}
+
+TEST_CASE("equal.contiguous_iterator_pairs")
+{
+    check_iterator_pairs<std::vector<int>>();
+}
+
+TEST_CASE("equal.input_with_container_iterators")
+{
+    check_stream_iterator_pair<std::forward_list<int>>();
+    check_stream_iterator_pair<std::list<int>>();
+    check_stream_iterator_pair<std::deque<int>>();
+    check_stream_iterator_pair<std::vector<int>>();
 }
 
 TEST_CASE("equal.single_pass")
