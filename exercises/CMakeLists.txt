@@ -4,6 +4,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/AddBysExercise.cmake")
 
 add_bys_exercise(warmup/add "")
 add_bys_exercise(type_traits/integral_constant type_traits bool_constant true_type false_type)
+add_bys_exercise(type_traits/is_same type_traits is_same_v)
 add_bys_exercise(algorithms/find algorithm)
 add_bys_exercise(algorithms/count algorithm)
 add_bys_exercise(algorithms/equal algorithm)
