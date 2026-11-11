@@ -1,0 +1,6 @@
+add_library(bys_integral_constant INTERFACE)
+target_include_directories(bys_integral_constant INTERFACE include)
+target_compile_features(bys_integral_constant INTERFACE cxx_std_20)
+
+add_executable(integral_constant_tests tests/integral_constant.cpp)
+target_link_libraries(integral_constant_tests PRIVATE bys_integral_constant bys_test_main)

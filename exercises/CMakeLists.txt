@@ -3,6 +3,7 @@ option(BYS_REFERENCE_TESTS "Build and register exercise tests against reference 
 include("${CMAKE_CURRENT_LIST_DIR}/AddBysExercise.cmake")
 
 add_bys_exercise(warmup/add "")
+add_bys_exercise(type_traits/integral_constant type_traits bool_constant true_type false_type)
 add_bys_exercise(algorithms/find algorithm)
 add_bys_exercise(algorithms/count algorithm)
 add_bys_exercise(algorithms/equal algorithm)
