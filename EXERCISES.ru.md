@@ -12,9 +12,8 @@
 
 | Задание | Чему вы научитесь | Статус |
 | --- | --- | --- |
-| `integral_constant` | Представлять константы времени компиляции в виде типов | [Стартовый шаблон](exercises/type_traits/integral_constant/README.ru.md) |
-| `is_same` | Сравнивать типы через специализацию шаблонов | Запланировано |
 | `integral_constant` | Представлять константы времени компиляции в виде типов | [Открыть задание](exercises/type_traits/integral_constant/README.ru.md) |
+| `is_same` | Проверять, совпадают ли два типа | [Открыть задание](exercises/type_traits/is_same/README.ru.md) |
 | `remove_reference` | Преобразовывать ссылочные типы | Запланировано |
 | `remove_cv` | Удалять квалификаторы const и volatile верхнего уровня | Запланировано |
 | `conditional` | Выбирать тип во время компиляции | Запланировано |

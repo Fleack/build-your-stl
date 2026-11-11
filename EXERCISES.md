@@ -12,9 +12,8 @@
 
 | Exercise | What you will learn | Status |
 | --- | --- | --- |
-| `integral_constant` | Represent compile-time values as types | [Starter ready](exercises/type_traits/integral_constant/README.md) |
-| `is_same` | Compare types using template specialization | Planned |
 | `integral_constant` | Represent compile-time values as types | [Open exercise](exercises/type_traits/integral_constant/README.md) |
+| `is_same` | Check whether two types are identical | [Open exercise](exercises/type_traits/is_same/README.md) |
 | `remove_reference` | Transform reference types | Planned |
 | `remove_cv` | Remove top-level const and volatile qualifiers | Planned |
 | `conditional` | Select a type at compile time | Planned |

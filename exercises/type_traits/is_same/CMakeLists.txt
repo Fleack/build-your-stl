@@ -1,0 +1,6 @@
+add_library(bys_is_same INTERFACE)
+target_include_directories(bys_is_same INTERFACE include)
+target_compile_features(bys_is_same INTERFACE cxx_std_20)
+
+add_executable(is_same_tests tests/is_same.cpp)
+target_link_libraries(is_same_tests PRIVATE bys_is_same bys_test_main)
